@@ -1,0 +1,9 @@
+terraform import "azurerm_resource_group.rg" /subscriptions/166157a8-9ce9-400b-91c7-1d42482b83d6/resourceGroups/terraformdemo-rg
+
+terraform import "azurerm_virtual_network.my_terraform_network" /subscriptions/166157a8-9ce9-400b-91c7-1d42482b83d6/resourceGroups/terraformdemo-rg/providers/Microsoft.Network/virtualNetworks/myvnet
+
+
+terraform init
+terraform plan
+
+terraform apply -auto-approve

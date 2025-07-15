@@ -1,0 +1,11 @@
+https://github.com/Azure/aztfexport
+
+wget https://packages.microsoft.com/ubuntu/22.04/prod/pool/main/a/aztfexport/aztfexport_0.17.1_amd64.deb
+
+sudo dpkg -i aztfexport_0.17.1_amd64.deb
+
+sudo apt-get install -f
+
+
+#进入一个空的目录
+aztfexport rg --non-interactive terraformdemo-rg

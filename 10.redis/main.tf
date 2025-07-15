@@ -29,13 +29,13 @@ resource "azurerm_redis_cache" "example_redis_cache" {
 
 # 创建 Redis Cache 私有终结点
 resource "azurerm_private_endpoint" "example_private_endpoint" {
-  name                = "example-private-endpoint"
+  name                = "${azurerm_redis_cache.example_redis_cache.name}-pvt"
   location            = data.azurerm_resource_group.existing_rg.location
   resource_group_name = data.azurerm_resource_group.existing_rg.name
   subnet_id           = data.azurerm_subnet.existing_subnet.id
 
   private_service_connection {
-    name                           = "example-privateserviceconnection"
+    name                           = "${azurerm_redis_cache.example_redis_cache.name}-pvt-connection"
     private_connection_resource_id = azurerm_redis_cache.example_redis_cache.id
     is_manual_connection           = false
     subresource_names              = ["redisCache"]
@@ -49,14 +49,14 @@ resource "azurerm_private_dns_zone" "example_dns_zone" {
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "example_dns_zone_link" {
-  name                  = "example-dns-zone-link"
+  name                  = "${azurerm_redis_cache.example_redis_cache.name}-pvt-link"
   resource_group_name   = data.azurerm_resource_group.existing_rg.name
   private_dns_zone_name = azurerm_private_dns_zone.example_dns_zone.name
   virtual_network_id    = data.azurerm_virtual_network.existing_vnet.id
 }
 
 resource "azurerm_private_dns_a_record" "example_a_record" {
-  name                = "example-redis-cache"
+  name                = "${azurerm_redis_cache.example_redis_cache.name}-record"
   zone_name           = azurerm_private_dns_zone.example_dns_zone.name
   resource_group_name = data.azurerm_resource_group.existing_rg.name
   ttl                 = 300

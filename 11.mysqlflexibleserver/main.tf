@@ -19,7 +19,7 @@ data "azurerm_subnet" "existing_subnet" {
 
 # 创建 MySQL Flexible Server
 resource "azurerm_mysql_flexible_server" "example_mysql_flexible_server" {
-  name                = var.mysql_flexibleserver_name
+  name                = "leimysqlserver02"
   location            = data.azurerm_resource_group.existing_rg.location
   resource_group_name = data.azurerm_resource_group.existing_rg.name
 
@@ -48,13 +48,13 @@ resource "azurerm_mysql_flexible_server" "example_mysql_flexible_server" {
 
 # 创建 MySQL Flexible Server 私有终结点
 resource "azurerm_private_endpoint" "example_private_endpoint" {
-  name                = "${var.mysql_flexibleserver_name}-pvt"
+  name                = "${azurerm_mysql_flexible_server.example_mysql_flexible_server.name}-pvt"
   location            = data.azurerm_resource_group.existing_rg.location
   resource_group_name = data.azurerm_resource_group.existing_rg.name
   subnet_id           = data.azurerm_subnet.existing_subnet.id
 
   private_service_connection {
-    name                           = "${var.mysql_flexibleserver_name}-pvt-connection"
+    name                           = "${azurerm_mysql_flexible_server.example_mysql_flexible_server.name}-pvt-connection"
     private_connection_resource_id = azurerm_mysql_flexible_server.example_mysql_flexible_server.id
     is_manual_connection           = false
     subresource_names              = ["mysqlServer"]
@@ -68,14 +68,14 @@ resource "azurerm_private_dns_zone" "example_dns_zone" {
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "example_dns_zone_link" {
-  name                  = "${var.mysql_flexibleserver_name}-pvt-link"
+  name                  = "${azurerm_mysql_flexible_server.example_mysql_flexible_server.name}-pvt-link"
   resource_group_name   = data.azurerm_resource_group.existing_rg.name
   private_dns_zone_name = azurerm_private_dns_zone.example_dns_zone.name
   virtual_network_id    = data.azurerm_virtual_network.existing_vnet.id
 }
 
 resource "azurerm_private_dns_a_record" "example_a_record" {
-  name                = "${var.mysql_flexibleserver_name}-record"
+  name                = "${azurerm_mysql_flexible_server.example_mysql_flexible_server.name}-record"
   zone_name           = azurerm_private_dns_zone.example_dns_zone.name
   resource_group_name = data.azurerm_resource_group.existing_rg.name
   ttl                 = 300
